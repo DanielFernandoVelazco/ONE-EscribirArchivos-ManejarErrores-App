@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 
 public class ConsultaPelicula {
 
-    Pelicula buscaPelicula(int numeroPelicula){
+    public Pelicula buscaPelicula(int numeroPelicula){
 
         URI direccion = URI.create("https://swapi.dev/api/films/" + numeroPelicula);
 
@@ -17,13 +17,12 @@ public class ConsultaPelicula {
                 .uri(direccion)
                 .build();
 
-        HttpResponse<String> response = null;
         try {
+            HttpResponse<String> response = null;
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
+            return new Gson().fromJson(response.body(), Pelicula.class);
+        } catch (Exception e) {
+            throw new RuntimeException("No encontre esa pelicula.");
         }
-
-        return new Gson().fromJson(response.body(), Pelicula.class);
     }
 }
